@@ -23,14 +23,14 @@ app.post('/generate', async (req, res) => {
   const data = req.body;
 
   const prompt = `Generate 10 baby names based on the following details:
-Gender: ${data.gender || 'Any'}
-Origin: ${data.origin || 'Any'}
-Religion: ${data.religion || 'Any'}
-Numerology: ${data.numerology || 'Any'}
-Start With: ${data.startWith || 'Any'}
-Associated Deity: ${data.deity || 'Any'}
-Meaning Category: ${data.meaningCategory || 'Any'}
-Return the names as a comma-separated list.`;
+    Gender: ${data.gender || 'Any'}
+    Origin: ${data.origin || 'Any'}
+    Religion: ${data.religion || 'Any'}
+    Numerology: ${data.numerology || 'Any'}
+    Start With: ${data.startWith || 'Any'}
+    Associated Deity: ${data.deity || 'Any'}
+    Meaning Category: ${data.meaningCategory || 'Any'}
+    Return the names as a comma-separated list.`;
 
   try {
     // Fetch AI response
