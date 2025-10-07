@@ -8,73 +8,125 @@
 </head>
 <body>
   <div class="container">
-    <h1>AI Baby Name Generator</h1>
+    <h1>AI Baby Name Generator (Indian)</h1>
     <form id="babyForm">
-      <label>Gender *</label>
-      <select id="gender" required>
-        <option value="">Select gender</option>
-        <option value="Male">Male</option>
-        <option value="Female">Female</option>
-        <option value="Unisex">Unisex</option>
-      </select>
+      <div>
+        <label>Gender *</label>
+        <select id="gender" required>
+          <option value="">Select gender</option>
+          <option value="Male">Male</option>
+          <option value="Female">Female</option>
+          <option value="Unisex">Unisex</option>
+        </select>
+      </div>
 
-      <label>Origin</label>
-      <select id="origin">
-        <option value="">Select origin</option>
-        <option value="Indian">Indian</option>
-        <option value="Western">Western</option>
-        <option value="Other">Other</option>
-      </select>
+      <div>
+        <label>Origin</label>
+        <select id="origin">
+          <option value="">Select origin</option>
+          <option value="Indian">Indian</option>
+          <option value="Sanskrit">Sanskrit</option>
+          <option value="Tamil">Tamil</option>
+          <option value="Punjabi">Punjabi</option>
+          <option value="Gujarati">Gujarati</option>
+          <option value="Bengali">Bengali</option>
+          <option value="Western">Western</option>
+        </select>
+      </div>
 
-      <label>Religion</label>
-      <select id="religion">
-        <option value="">Select religion</option>
-        <option value="Hindu">Hindu</option>
-        <option value="Christian">Christian</option>
-        <option value="Muslim">Muslim</option>
-        <option value="Other">Other</option>
-      </select>
+      <div>
+        <label>Religion</label>
+        <select id="religion">
+          <option value="">Select religion</option>
+          <option value="Hindu">Hindu</option>
+          <option value="Muslim">Muslim</option>
+          <option value="Christian">Christian</option>
+          <option value="Sikh">Sikh</option>
+          <option value="Jain">Jain</option>
+          <option value="Buddhist">Buddhist</option>
+          <option value="Parsi">Parsi</option>
+        </select>
+      </div>
 
-      <label>Numerology</label>
-      <select id="numerology">
-        <option value="">Select numerology</option>
-        <option value="1">1</option>
-        <option value="2">2</option>
-        <option value="3">3</option>
-        <option value="4">4</option>
-        <option value="5">5</option>
-        <option value="6">6</option>
-        <option value="7">7</option>
-        <option value="8">8</option>
-        <option value="9">9</option>
-      </select>
+      <div>
+        <label>Numerology</label>
+        <select id="numerology">
+          <option value="">Select numerology</option>
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+          <option value="6">6</option>
+          <option value="7">7</option>
+          <option value="8">8</option>
+          <option value="9">9</option>
+        </select>
+      </div>
 
-      <label>Start With / Rashi</label>
-      <input type="text" id="startWith" placeholder="Starting letter or Rashi">
+      <div>
+        <label>Start With (letter)</label>
+        <input type="text" id="startWith" maxlength="1" placeholder="Enter a letter like A, K, M">
+      </div>
 
-      <label>Associated Deity/God</label>
-      <select id="deity">
-        <option value="">Select deity</option>
-        <option value="Ganesha">Ganesha</option>
-        <option value="Krishna">Krishna</option>
-        <option value="Lakshmi">Lakshmi</option>
-        <option value="Other">Other</option>
-      </select>
+      <div>
+        <label>or Select Rashi</label>
+        <select id="rashi">
+          <option value="">Select Rashi</option>
+          <option value="Mesh (Aries)">Mesh (Aries)</option>
+          <option value="Vrishabha (Taurus)">Vrishabha (Taurus)</option>
+          <option value="Mithun (Gemini)">Mithun (Gemini)</option>
+          <option value="Karka (Cancer)">Karka (Cancer)</option>
+          <option value="Simha (Leo)">Simha (Leo)</option>
+          <option value="Kanya (Virgo)">Kanya (Virgo)</option>
+          <option value="Tula (Libra)">Tula (Libra)</option>
+          <option value="Vrishchik (Scorpio)">Vrishchik (Scorpio)</option>
+          <option value="Dhanu (Sagittarius)">Dhanu (Sagittarius)</option>
+          <option value="Makar (Capricorn)">Makar (Capricorn)</option>
+          <option value="Kumbha (Aquarius)">Kumbha (Aquarius)</option>
+          <option value="Meen (Pisces)">Meen (Pisces)</option>
+        </select>
+      </div>
 
-      <label>Meaning Categories</label>
-      <select id="meaningCategory">
-        <option value="">Select meaning category</option>
-        <option value="Nature">Nature</option>
-        <option value="Virtues">Virtues</option>
-        <option value="Spiritual">Spiritual</option>
-        <option value="Other">Other</option>
-      </select>
+      <div>
+        <label>Associated Deity / God</label>
+        <select id="deity">
+          <option value="">Select deity</option>
+          <option value="Lord Ganesha">Lord Ganesha</option>
+          <option value="Lord Krishna">Lord Krishna</option>
+          <option value="Lord Shiva">Lord Shiva</option>
+          <option value="Lord Rama">Lord Rama</option>
+          <option value="Lord Vishnu">Lord Vishnu</option>
+          <option value="Goddess Lakshmi">Goddess Lakshmi</option>
+          <option value="Goddess Durga">Goddess Durga</option>
+          <option value="Goddess Saraswati">Goddess Saraswati</option>
+          <option value="Goddess Parvati">Goddess Parvati</option>
+          <option value="Hanuman">Hanuman</option>
+          <option value="Murugan / Kartikeya">Murugan / Kartikeya</option>
+          <option value="Sai Baba">Sai Baba</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+
+      <div>
+        <label>Meaning Category</label>
+        <select id="meaningCategory">
+          <option value="">Select meaning category</option>
+          <option value="Nature (Sun, Moon, River, Flower)">Nature</option>
+          <option value="Virtues (Peace, Strength, Love, Kindness)">Virtues</option>
+          <option value="Spiritual (Faith, Devotion, Purity)">Spiritual</option>
+          <option value="Mythological">Mythological</option>
+          <option value="Modern & Trendy">Modern & Trendy</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
 
       <button type="submit">Generate Names</button>
     </form>
 
     <h2>Generated Names</h2>
     <ul id="nameResults"></ul>
+
     <h2>Favorites</h2>
     <ul id="favorites"></ul>
   </div>

@@ -6,14 +6,26 @@ form.addEventListener('submit', async (e) => {
   e.preventDefault();
   nameResults.innerHTML = '<li>Generating names...</li>';
 
+  // Get all values
+  const gender = document.getElementById('gender').value;
+  const origin = document.getElementById('origin').value;
+  const religion = document.getElementById('religion').value;
+  const numerology = document.getElementById('numerology').value;
+  const startWith = document.getElementById('startWith').value.trim();
+  const rashi = document.getElementById('rashi').value;
+  const deity = document.getElementById('deity').value;
+  const meaningCategory = document.getElementById('meaningCategory').value;
+
+
   const data = {
-    gender: document.getElementById('gender').value,
-    origin: document.getElementById('origin').value,
-    religion: document.getElementById('religion').value,
-    numerology: document.getElementById('numerology').value,
-    startWith: document.getElementById('startWith').value,
-    deity: document.getElementById('deity').value,
-    meaningCategory: document.getElementById('meaningCategory').value
+    gender,
+    origin,
+    religion,
+    numerology,
+    startWith: startWith || '',   
+    rashi: !startWith ? rashi : '',
+    deity,
+    meaningCategory
   };
 
   try {
@@ -24,7 +36,6 @@ form.addEventListener('submit', async (e) => {
     });
 
     const result = await response.json();
-
     const names = result.names || [];
     nameResults.innerHTML = '';
 
