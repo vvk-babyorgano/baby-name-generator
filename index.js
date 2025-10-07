@@ -22,7 +22,7 @@ function parseNames(text) {
 app.post('/generate', async (req, res) => {
   const data = req.body;
 
-  const prompt = `Generate 3 baby names based on the following details:
+  const prompt = `Generate 10 baby names based on the following details:
 Gender: ${data.gender || 'Any'}
 Origin: ${data.origin || 'Any'}
 Religion: ${data.religion || 'Any'}
@@ -46,7 +46,7 @@ Return the names as a comma-separated list.`;
       body: JSON.stringify({
         model: 'gpt-4.1-mini',
         messages: [{ role: 'user', content: prompt }],
-        max_tokens: 200
+        max_tokens: 500
       }),
       signal: controller.signal
     });

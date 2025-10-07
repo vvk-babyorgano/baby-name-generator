@@ -1,12 +1,18 @@
 const form = document.getElementById('babyForm');
 const nameResults = document.getElementById('nameResults');
 const favorites = document.getElementById('favorites');
+const generateBtn = document.getElementById('generateBtn');
 
 form.addEventListener('submit', async (e) => {
   e.preventDefault();
+
+  // Show loading state
+  generateBtn.disabled = true; // prevent multiple clicks
+  const originalText = generateBtn.textContent;
+  generateBtn.textContent = 'Generating...';
+
   nameResults.innerHTML = '<li>Generating names...</li>';
 
-  // Get all values
   const gender = document.getElementById('gender').value;
   const origin = document.getElementById('origin').value;
   const religion = document.getElementById('religion').value;
@@ -16,13 +22,12 @@ form.addEventListener('submit', async (e) => {
   const deity = document.getElementById('deity').value;
   const meaningCategory = document.getElementById('meaningCategory').value;
 
-
   const data = {
     gender,
     origin,
     religion,
     numerology,
-    startWith: startWith || '',   
+    startWith: startWith || '',
     rashi: !startWith ? rashi : '',
     deity,
     meaningCategory
@@ -53,6 +58,10 @@ form.addEventListener('submit', async (e) => {
   } catch (err) {
     console.error(err);
     nameResults.innerHTML = '<li>Error generating names. Please try again later.</li>';
+  } finally {
+    // Reset button
+    generateBtn.disabled = false;
+    generateBtn.textContent = originalText;
   }
 });
 
