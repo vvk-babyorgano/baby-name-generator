@@ -1,0 +1,18 @@
+{
+  "name": "baby-name-generator",
+  "version": "1.0.0",
+  "description": "AI-powered baby name generator using OpenRouter API",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
+  "keywords": ["baby names", "AI", "generator"],
+  "author": "Your Name",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0",
+    "node-fetch": "^3.3.2"
+  }
+}

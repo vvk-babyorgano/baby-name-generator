@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Baby Name Generator</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>AI Baby Name Generator</h1>
+    <form id="babyForm">
+      <label>Gender *</label>
+      <select id="gender" required>
+        <option value="">Select gender</option>
+        <option value="Male">Male</option>
+        <option value="Female">Female</option>
+        <option value="Unisex">Unisex</option>
+      </select>
+
+      <label>Origin</label>
+      <select id="origin">
+        <option value="">Select origin</option>
+        <option value="Indian">Indian</option>
+        <option value="Western">Western</option>
+        <option value="Other">Other</option>
+      </select>
+
+      <label>Religion</label>
+      <select id="religion">
+        <option value="">Select religion</option>
+        <option value="Hindu">Hindu</option>
+        <option value="Christian">Christian</option>
+        <option value="Muslim">Muslim</option>
+        <option value="Other">Other</option>
+      </select>
+
+      <label>Numerology</label>
+      <select id="numerology">
+        <option value="">Select numerology</option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6">6</option>
+        <option value="7">7</option>
+        <option value="8">8</option>
+        <option value="9">9</option>
+      </select>
+
+      <label>Start With / Rashi</label>
+      <input type="text" id="startWith" placeholder="Starting letter or Rashi">
+
+      <label>Associated Deity/God</label>
+      <select id="deity">
+        <option value="">Select deity</option>
+        <option value="Ganesha">Ganesha</option>
+        <option value="Krishna">Krishna</option>
+        <option value="Lakshmi">Lakshmi</option>
+        <option value="Other">Other</option>
+      </select>
+
+      <label>Meaning Categories</label>
+      <select id="meaningCategory">
+        <option value="">Select meaning category</option>
+        <option value="Nature">Nature</option>
+        <option value="Virtues">Virtues</option>
+        <option value="Spiritual">Spiritual</option>
+        <option value="Other">Other</option>
+      </select>
+
+      <button type="submit">Generate Names</button>
+    </form>
+
+    <h2>Generated Names</h2>
+    <ul id="nameResults"></ul>
+    <h2>Favorites</h2>
+    <ul id="favorites"></ul>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
