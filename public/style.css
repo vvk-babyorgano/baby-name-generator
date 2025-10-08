@@ -190,19 +190,20 @@
     /* Responsive design */
     @media (max-width: 768px) {
       .container {
-        padding: 25px;
+        padding: 15px;
       }
 
       h1 {
-        font-size: 1.8em;
+        font-size: 21px;
       }
 
       h2 {
-        font-size: 1.4em;
+        font-size: 18px;
       }
 
       form {
         grid-template-columns: 1fr;
+        margin-top:15px;
       }
     }
 
