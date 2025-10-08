@@ -30,8 +30,9 @@ function parseNamesWithMeanings(text) {
 app.post('/generate', async (req, res) => {
   const data = req.body;
 
+  const randomSeed = Math.floor(Math.random() * 1000); // random number
   const prompt = `
-  Generate 10 beautiful and meaningful baby names with their meanings based on the following details:
+  Generate 10 beautiful and meaningful baby names with their meanings based on the following details (seed: ${randomSeed}):
   - Gender: ${data.gender || 'Any'}
   - Origin: ${data.origin || 'Any'}
   - Religion: ${data.religion || 'Any'}
@@ -45,7 +46,9 @@ app.post('/generate', async (req, res) => {
   1. Name - Meaning
   2. Name - Meaning
   (and so on)
+  Ensure that names are unique for each request even with same inputs.
   `;
+
 
   try {
     const controller = new AbortController();
