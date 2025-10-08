@@ -1,105 +1,162 @@
+/* script.js - Updated
+  - Displays only name in lists (no [object Object])
+  - Stores full info per name (name + meaning + details)
+  - Download works for both generated and favorite items
+  - Backwards-compatible with older localStorage shape
+*/
+
 const form = document.getElementById('babyForm');
 const nameResults = document.getElementById('nameResults');
 const favorites = document.getElementById('favorites');
 const generateBtn = document.getElementById('generateBtn');
 
-// Load favorites from localStorage on page load
-function loadFavorites() {
-  const saved = JSON.parse(localStorage.getItem('favorites')) || [];
-  favorites.innerHTML = '';
-  saved.forEach(name => {
-    createFavoriteItem(name);
-  });
+// ---------- Helpers for localStorage (supports older formats) ----------
+function readStoredFavorites() {
+  const raw = localStorage.getItem('favorites');
+  if (!raw) return [];
+  try {
+    const parsed = JSON.parse(raw);
+    // If array of strings (old format), convert to objects
+    if (Array.isArray(parsed) && parsed.length && typeof parsed[0] === 'string') {
+      return parsed.map(name => ({ name, meaning: '', details: {} }));
+    }
+    // If already stored as objects, ensure shape
+    if (Array.isArray(parsed)) {
+      return parsed.map(it => ({
+        name: it.name || (typeof it === 'string' ? it : ''),
+        meaning: it.meaning || '',
+        details: it.details || {}
+      }));
+    }
+    return [];
+  } catch (err) {
+    console.warn('Failed to parse favorites from localStorage:', err);
+    return [];
+  }
 }
 
-// Save favorites to localStorage
-function saveFavorites() {
-  const favNames = [...favorites.children].map(li => li.dataset.name);
-  localStorage.setItem('favorites', JSON.stringify(favNames));
+function writeStoredFavorites(arr) {
+  localStorage.setItem('favorites', JSON.stringify(arr));
 }
 
-// Create a favorite list item with delete button
-function createFavoriteItem(name) {
+// ---------- UI: create favorite item (shows name, delete, download) ----------
+function createFavoriteItem(favObj) {
+  // favObj = { name, meaning, details }
   const li = document.createElement('li');
-  li.dataset.name = name;
+  li.dataset.name = favObj.name;
+  li.dataset.info = JSON.stringify(favObj); // store full info
   li.style.position = 'relative';
-  li.style.paddingRight = '60px';
+  li.style.paddingRight = '80px';
+  li.style.marginBottom = '6px';
 
   const span = document.createElement('span');
-  span.textContent = name;
+  span.textContent = favObj.name; // show only name
+  li.appendChild(span);
 
-  // Delete icon
+  // Delete button
   const deleteBtn = document.createElement('i');
   deleteBtn.className = 'fas fa-trash';
-  deleteBtn.style.cursor = 'pointer';
-  deleteBtn.style.position = 'absolute';
-  deleteBtn.style.top = '50%';
-  deleteBtn.style.transform = 'translateY(-50%)';
-  deleteBtn.style.right = '30px';
   deleteBtn.title = 'Remove from favorites';
+  Object.assign(deleteBtn.style, {
+    cursor: 'pointer',
+    position: 'absolute',
+    top: '50%',
+    transform: 'translateY(-50%)',
+    right: '35px'
+  });
   deleteBtn.addEventListener('click', () => {
     li.remove();
-    saveFavorites();
+    const saved = readStoredFavorites().filter(f => f.name !== favObj.name);
+    writeStoredFavorites(saved);
     updateHearts();
   });
-
-  // Download icon
-  const downloadIcon = document.createElement('i');
-  downloadIcon.className = 'fas fa-download';
-  downloadIcon.style.cursor = 'pointer';
-  downloadIcon.style.position = 'absolute';
-  downloadIcon.style.top = '50%';
-  downloadIcon.style.transform = 'translateY(-50%)';
-  downloadIcon.style.right = '5px';
-  downloadIcon.title = 'Download Name Card';
-  downloadIcon.addEventListener('click', () => {
-    const cardName = document.getElementById('cardName');
-    const cardDetails = document.getElementById('cardDetails');
-
-    const gender = document.getElementById('gender').value || 'Any';
-    const origin = document.getElementById('origin').value || 'Any';
-    const religion = document.getElementById('religion').value || 'Any';
-    const numerology = document.getElementById('numerology').value || 'Any';
-    const startWith = document.getElementById('startWith').value.trim();
-    const rashi = document.getElementById('rashi').value;
-    const deity = document.getElementById('deity').value || 'Any';
-    const meaningCategory = document.getElementById('meaningCategory').value || 'Any';
-
-    cardName.textContent = name;
-    cardDetails.innerHTML = `
-      Gender: ${gender}<br>
-      Origin: ${origin}<br>
-      Religion: ${religion}<br>
-      Numerology: ${numerology}<br>
-      Start With / Rashi: ${startWith || rashi || 'Any'}<br>
-      Deity: ${deity}<br>
-      Meaning Category: ${meaningCategory}
-    `;
-
-    const nameCard = document.getElementById('nameCard');
-    html2canvas(nameCard).then(canvas => {
-      const link = document.createElement('a');
-      link.download = `${name}_NameCard.png`;
-      link.href = canvas.toDataURL('image/png');
-      link.click();
-    });
-  });
-
-  li.appendChild(span);
   li.appendChild(deleteBtn);
-  li.appendChild(downloadIcon);
+
+  // Download button
+  const downloadBtn = document.createElement('i');
+  downloadBtn.className = 'fas fa-download';
+  downloadBtn.title = 'Download Name Card';
+  Object.assign(downloadBtn.style, {
+    cursor: 'pointer',
+    position: 'absolute',
+    top: '50%',
+    transform: 'translateY(-50%)',
+    right: '5px'
+  });
+  downloadBtn.addEventListener('click', () => {
+    // Use favObj (stored details + meaning)
+    downloadNameCard(favObj);
+  });
+  li.appendChild(downloadBtn);
 
   favorites.appendChild(li);
 }
 
+// ---------- Download function (reusable) ----------
+function downloadNameCard(info) {
+  // info: { name, meaning, details:{gender,origin,...} }
+  const cardName = document.getElementById('cardName');
+  const cardDetails = document.getElementById('cardDetails');
 
-// Update hearts in generated names based on favorites
+  // Fill card
+  cardName.textContent = info.name;
+  const d = info.details || {};
+  const meaningText = info.meaning || 'Meaning not available';
+
+  cardDetails.innerHTML = `
+    <div style="margin:6px 0;"><strong>Meaning:</strong> ${escapeHtml(meaningText)}</div>
+    <div style="margin-top:8px; text-align:left; display:flex; flex-direction: column; gap: 10px; font-size: 14px;">
+      <div>👶 <strong>Gender:</strong> ${escapeHtml(d.gender || 'Not specified')}</div>
+      <div>🌍 <strong>Origin:</strong> ${escapeHtml(d.origin || 'Not specified')}</div>
+      <div>🕉️ <strong>Religion:</strong> ${escapeHtml(d.religion || 'Not specified')}</div>
+      <div>🔢 <strong>Numerology:</strong> ${escapeHtml(d.numerology || 'Not specified')}</div>
+      <div>📝 <strong>Start / Rashi:</strong> ${escapeHtml(d.startWith || d.rashi || 'Not specified')}</div>
+      <div>🙏 <strong>Deity:</strong> ${escapeHtml(d.deity || 'Not specified')}</div>
+      <div>💫 <strong>Category:</strong> ${escapeHtml(d.meaningCategory || 'Not specified')}</div>
+    </div>
+  `;
+
+  // ensure nameCard is visible to html2canvas (it can be hidden visually)
+  const nameCard = document.getElementById('nameCard');
+  const prevDisplay = nameCard.style.display;
+  nameCard.style.display = 'block';
+
+  // Optional: small delay to let DOM paint fonts/styles (usually fine)
+  setTimeout(() => {
+    html2canvas(nameCard, { scale: 2 }).then(canvas => {
+      const link = document.createElement('a');
+      link.download = `${sanitizeFilename(info.name)}_BabyOrgano_Name_Card.png`;
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+      // restore
+      nameCard.style.display = prevDisplay || 'none';
+    }).catch(err => {
+      console.error('html2canvas error:', err);
+      nameCard.style.display = prevDisplay || 'none';
+    });
+  }, 80);
+}
+
+// ---------- Utility ----------
+function sanitizeFilename(name) {
+  return name.replace(/[^a-z0-9_\- ]/gi, '').replace(/\s+/g, '_');
+}
+function escapeHtml(s) {
+  if (!s) return '';
+  return String(s)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+}
+
+// ---------- Hearts (sync with favorites) ----------
 function updateHearts() {
-  const favNames = JSON.parse(localStorage.getItem('favorites')) || [];
+  const saved = readStoredFavorites();
+  const names = saved.map(f => f.name);
   document.querySelectorAll('#nameResults li').forEach(li => {
     const heart = li.querySelector('.heart-icon');
     if (!heart) return;
-    if (favNames.includes(li.dataset.name)) {
+    if (names.includes(li.dataset.name)) {
       heart.classList.add('fas');
       heart.classList.remove('far');
     } else {
@@ -109,136 +166,151 @@ function updateHearts() {
   });
 }
 
-// Add a name to favorites
-function addToFavorites(name) {
-  const favNames = JSON.parse(localStorage.getItem('favorites')) || [];
-  if (!favNames.includes(name)) {
-    createFavoriteItem(name);
-    saveFavorites();
+// ---------- add to favorites (object) ----------
+function addToFavorites(info) {
+  const saved = readStoredFavorites();
+  if (!saved.some(f => f.name === info.name)) {
+    saved.push(info);
+    writeStoredFavorites(saved);
+    createFavoriteItem(info);
     updateHearts();
   }
 }
 
-// Initialize favorites
+// ---------- Initialize favorites UI ----------
+function loadFavorites() {
+  favorites.innerHTML = '';
+  const saved = readStoredFavorites();
+  saved.forEach(item => createFavoriteItem(item));
+}
 loadFavorites();
 
+// ---------- Form submit (generate names) ----------
 form.addEventListener('submit', async (e) => {
   e.preventDefault();
 
-  // Show loading state
+  // Loading state
   generateBtn.disabled = true;
   const originalText = generateBtn.textContent;
   generateBtn.textContent = 'Generating...';
   nameResults.innerHTML = '<li>Generating names...</li>';
 
-  const gender = document.getElementById('gender').value;
-  const origin = document.getElementById('origin').value;
-  const religion = document.getElementById('religion').value;
-  const numerology = document.getElementById('numerology').value;
-  const startWith = document.getElementById('startWith').value.trim();
-  const rashi = document.getElementById('rashi').value;
-  const deity = document.getElementById('deity').value;
-  const meaningCategory = document.getElementById('meaningCategory').value;
-
-  const data = {
-    gender,
-    origin,
-    religion,
-    numerology,
-    startWith: startWith || '',
-    rashi: !startWith ? rashi : '',
-    deity,
-    meaningCategory
+  // Collect filter/details
+  const details = {
+    gender: document.getElementById('gender').value,
+    origin: document.getElementById('origin').value,
+    religion: document.getElementById('religion').value,
+    numerology: document.getElementById('numerology').value,
+    startWith: document.getElementById('startWith').value.trim(),
+    rashi: document.getElementById('rashi').value,
+    deity: document.getElementById('deity').value,
+    meaningCategory: document.getElementById('meaningCategory').value
   };
 
   try {
-    const response = await fetch('/generate', {
+    const resp = await fetch('/generate', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data)
+      body: JSON.stringify(details)
     });
 
-    const result = await response.json();
-    const names = result.names || [];
+    const json = await resp.json();
+    const items = json.names || []; // names can be array of strings OR objects {name,meaning}
+
     nameResults.innerHTML = '';
 
-    if (names.length === 0) {
-      nameResults.innerHTML = `<li>${result.error || 'No names generated.'}</li>`;
+    if (!Array.isArray(items) || items.length === 0) {
+      nameResults.innerHTML = `<li>${json.error || 'No names generated.'}</li>`;
+      return;
     }
 
-    const favNames = JSON.parse(localStorage.getItem('favorites')) || [];
+    // existing favorites to mark hearts
+    const stored = readStoredFavorites();
+    const storedNames = stored.map(s => s.name);
 
-    names.forEach(name => {
+    items.forEach(item => {
+      // normalize item -> info object with name + meaning + details
+      let info;
+      if (typeof item === 'string') {
+        info = { name: item, meaning: '', details };
+      } else if (item && typeof item === 'object') {
+        info = {
+          name: item.name || (item[0] || ''), // try fallback
+          meaning: item.meaning || item.meaningText || '',
+          details
+        };
+      } else {
+        return; // skip unexpected
+      }
+
       const li = document.createElement('li');
-      li.textContent = name;
-      li.dataset.name = name;
+      li.dataset.name = info.name;
+      li.dataset.info = JSON.stringify(info);
       li.style.position = 'relative';
-      li.style.paddingRight = '60px'; // space for icons
+      li.style.paddingRight = '80px';
+      li.style.marginBottom = '6px';
+
+      // name text span (so we don't overwrite children)
+      const span = document.createElement('span');
+      span.textContent = info.name;
+      li.appendChild(span);
 
       // Heart icon
       const heart = document.createElement('i');
-      heart.className = favNames.includes(name) ? 'fas fa-heart heart-icon' : 'far fa-heart heart-icon';
-      heart.style.cursor = 'pointer';
-      heart.style.position = 'absolute';
-      heart.style.top = '50%';
-      heart.style.transform = 'translateY(-50%)';
-      heart.style.right = '30px';
+      heart.className = storedNames.includes(info.name) ? 'fas fa-heart heart-icon' : 'far fa-heart heart-icon';
+      heart.title = 'Add to favorites';
+      Object.assign(heart.style, {
+        cursor: 'pointer',
+        position: 'absolute',
+        top: '50%',
+        transform: 'translateY(-50%)',
+        right: '35px'
+      });
       heart.addEventListener('click', () => {
         if (heart.classList.contains('far')) {
-          addToFavorites(name);
+          addToFavorites(info);
+          heart.classList.remove('far');
+          heart.classList.add('fas');
         } else {
+          // remove from favorites
+          const saved = readStoredFavorites().filter(f => f.name !== info.name);
+          writeStoredFavorites(saved);
+          // remove any matching favorite li
           document.querySelectorAll('#favorites li').forEach(favLi => {
-            if (favLi.dataset.name === name) {
-              favLi.remove();
-            }
+            try {
+              const fi = JSON.parse(favLi.dataset.info);
+              if (fi.name === info.name) favLi.remove();
+            } catch (e) {}
           });
-          saveFavorites();
-          updateHearts();
+          heart.classList.remove('fas');
+          heart.classList.add('far');
         }
       });
+      li.appendChild(heart);
 
       // Download icon
       const downloadIcon = document.createElement('i');
       downloadIcon.className = 'fas fa-download';
-      downloadIcon.style.cursor = 'pointer';
-      downloadIcon.style.position = 'absolute';
-      downloadIcon.style.top = '50%';
-      downloadIcon.style.transform = 'translateY(-50%)';
-      downloadIcon.style.right = '5px';
       downloadIcon.title = 'Download Name Card';
-      downloadIcon.addEventListener('click', () => {
-        const cardName = document.getElementById('cardName');
-        const cardDetails = document.getElementById('cardDetails');
-
-        cardName.textContent = name;
-        cardDetails.innerHTML = `
-          Gender: ${gender || 'Any'}<br>
-          Origin: ${origin || 'Any'}<br>
-          Religion: ${religion || 'Any'}<br>
-          Numerology: ${numerology || 'Any'}<br>
-          Start With / Rashi: ${startWith || rashi || 'Any'}<br>
-          Deity: ${deity || 'Any'}<br>
-          Meaning Category: ${meaningCategory || 'Any'}
-        `;
-
-        const nameCard = document.getElementById('nameCard');
-        html2canvas(nameCard).then(canvas => {
-          const link = document.createElement('a');
-          link.download = `${name}_NameCard.png`;
-          link.href = canvas.toDataURL('image/png');
-          link.click();
-        });
+      Object.assign(downloadIcon.style, {
+        cursor: 'pointer',
+        position: 'absolute',
+        top: '50%',
+        transform: 'translateY(-50%)',
+        right: '5px'
       });
-
-      li.appendChild(heart);
+      downloadIcon.addEventListener('click', () => {
+        downloadNameCard(info);
+      });
       li.appendChild(downloadIcon);
+
       nameResults.appendChild(li);
     });
 
-    updateHearts(); // sync hearts after generating
+    updateHearts();
 
   } catch (err) {
-    console.error(err);
+    console.error('Generate error:', err);
     nameResults.innerHTML = '<li>Error generating names. Please try again later.</li>';
   } finally {
     generateBtn.disabled = false;

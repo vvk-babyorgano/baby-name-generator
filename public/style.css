@@ -6,7 +6,7 @@
 
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background: linear-gradient(135deg, #ed1651 0%, #ffdee8 100%);
       min-height: 100vh;
       padding: 20px;
     }
@@ -32,12 +32,17 @@
       }
     }
 
+    h1#cardName{
+    color: #000000;
+    background: none;
+    }
+
     h1 {
       text-align: center;
       color: #333;
       font-size: 26px;
       margin-bottom: 10px;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background: linear-gradient(135deg, #ed1651 0%, #ff64a4 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
@@ -58,7 +63,7 @@
       margin-bottom: 20px;
       font-size: 1.8em;
       padding-bottom: 10px;
-      border-bottom: 3px solid #667eea;
+      border-bottom: 3px solid #ed1651;
     }
 
     form {
@@ -86,21 +91,21 @@
       border-radius: 10px;
       font-size: 1em;
       transition: all 0.3s ease;
-      background: #f8f9fa;
+      background: #faf8f8;
       font-family: inherit;
     }
 
     form select:focus, 
     form input:focus {
       outline: none;
-      border-color: #667eea;
+      border-color: #ed1651;
       background: white;
-      box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+      box-shadow: 0 0 0 4px rgb(234 102 124 / 10%);
     }
 
     form select:hover, 
     form input:hover {
-      border-color: #667eea;
+     border-color: #ed1651;
     }
 
     button {
@@ -108,7 +113,7 @@
       margin-top: 20px;
       padding: 16px;
       width: 100%;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background: linear-gradient(135deg, #ed1651 0%, #ff64a4 100%);
       color: #fff;
       border: none;
       border-radius: 12px;
@@ -116,14 +121,14 @@
       font-weight: 600;
       cursor: pointer;
       transition: all 0.3s ease;
-      box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+      box-shadow: 0 4px 15px rgb(234 102 102 / 40%);
       text-transform: uppercase;
       letter-spacing: 1px;
     }
 
     button:hover {
       transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+      box-shadow: 0 6px 20px rgba(234, 102, 128, 0.6);
     }
 
     button:active {
@@ -138,7 +143,7 @@
     }
 
     ul li {
-      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      background: linear-gradient(135deg, #faf5f7 0%, #fed9e8 100%);
       margin: 0;
       padding: 20px;
       border-radius: 15px;
@@ -157,7 +162,7 @@
       left: 0;
       width: 4px;
       height: 100%;
-      background: #667eea;
+      background: #ea6666;
       transform: scaleY(0);
       transition: transform 0.3s ease;
     }
@@ -168,8 +173,8 @@
 
     ul li:hover {
       transform: translateX(5px);
-      border-color: #667eea;
-      box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+      border-color: #ed1651;
+      box-shadow: 0 5px 15px rgb(234 102 103 / 30%);
     }
 
     /* Empty state styling */
