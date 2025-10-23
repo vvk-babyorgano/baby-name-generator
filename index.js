@@ -42,6 +42,7 @@ app.post('/generate', async (req, res) => {
   - Associated Deity: ${data.deity || 'Any'}
   - Meaning Category: ${data.meaningCategory || 'Any'}
 
+  ⚠️ Important: All names MUST start with one of the letters associated with the selected Rashi (${data.rashiLetters || 'Any'}).
   Return them in this format:
   1. Name - Meaning
   2. Name - Meaning
