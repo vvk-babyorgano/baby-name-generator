@@ -195,17 +195,28 @@ form.addEventListener('submit', async (e) => {
   generateBtn.textContent = 'Generating...';
   nameResults.innerHTML = '<li>Generating names...</li>';
 
+  const rashiSelect = document.getElementById('rashi');
+  const selectedOption = rashiSelect.options[rashiSelect.selectedIndex];
+  const rashiValue = selectedOption.value;
+
+  // extract letters from option text, e.g. "Vrishabha (Taurus) - B, V, U"
+  const matchLetters = selectedOption.textContent.match(/-\s*([A-Z,\s]+)/i);
+  const rashiLetters = matchLetters ? matchLetters[1].trim() : '';
+
+
   // Collect filter/details
   const details = {
-    gender: document.getElementById('gender').value,
-    origin: document.getElementById('origin').value,
-    religion: document.getElementById('religion').value,
-    numerology: document.getElementById('numerology').value,
-    startWith: document.getElementById('startWith').value.trim(),
-    rashi: document.getElementById('rashi').value,
-    deity: document.getElementById('deity').value,
-    meaningCategory: document.getElementById('meaningCategory').value
+   gender: document.getElementById('gender').value,
+   origin: document.getElementById('origin').value,
+   religion: document.getElementById('religion').value,
+   numerology: document.getElementById('numerology').value,
+   startWith: document.getElementById('startWith').value.trim(),
+   rashi: rashiValue,
+   rashiLetters,
+   deity: document.getElementById('deity').value,
+   meaningCategory: document.getElementById('meaningCategory').value
   };
+
 
   try {
     const resp = await fetch('/generate', {
