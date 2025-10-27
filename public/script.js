@@ -137,6 +137,34 @@ function downloadNameCard(info) {
   }, 80);
 }
 
+// ---------- Mutual exclusion: Start With vs Rashi ----------
+const startWithInput = document.getElementById('startWith');
+const rashiSelect = document.getElementById('rashi');
+
+startWithInput.addEventListener('input', () => {
+  if (startWithInput.value.trim()) {
+    rashiSelect.disabled = true;
+    rashiSelect.style.opacity = '0.5';
+    rashiSelect.style.cursor = 'not-allowed';
+  } else {
+    rashiSelect.disabled = false;
+    rashiSelect.style.opacity = '1';
+    rashiSelect.style.cursor = 'pointer';
+  }
+});
+
+rashiSelect.addEventListener('change', () => {
+  if (rashiSelect.value) {
+    startWithInput.disabled = true;
+    startWithInput.style.opacity = '0.5';
+    startWithInput.style.cursor = 'not-allowed';
+  } else {
+    startWithInput.disabled = false;
+    startWithInput.style.opacity = '1';
+    startWithInput.style.cursor = 'text';
+  }
+});
+
 // ---------- Utility ----------
 function sanitizeFilename(name) {
   return name.replace(/[^a-z0-9_\- ]/gi, '').replace(/\s+/g, '_');

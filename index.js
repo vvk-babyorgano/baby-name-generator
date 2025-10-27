@@ -32,23 +32,26 @@ app.post('/generate', async (req, res) => {
 
   const randomSeed = Math.floor(Math.random() * 1000); // random number
   const prompt = `
-  Generate 10 beautiful and meaningful baby names with their meanings based on the following details (seed: ${randomSeed}):
+  Generate 10 beautiful and meaningful baby names with their meanings based on the following details (unique output each time you generate, even with same inputs):
+  Random seed: ${randomSeed}
   - Gender: ${data.gender || 'Any'}
   - Origin: ${data.origin || 'Any'}
   - Religion: ${data.religion || 'Any'}
   - Numerology: ${data.numerology || 'Any'}
-  - Start With: ${data.startWith || 'Any'}
-  - Rashi: ${data.rashi || 'Any'}
+  - Start With: ${data.startWith ? data.startWith : (data.rashi ? `Letters from ${data.rashi}` : 'Any')}
+  - Rashi: ${data.rashi || 'None selected'}
   - Associated Deity: ${data.deity || 'Any'}
   - Meaning Category: ${data.meaningCategory || 'Any'}
 
-  ⚠️ Important: All names MUST start with one of the letters associated with the selected Rashi (${data.rashiLetters || 'Any'}).
-  Return them in this format:
+  All names MUST start with letters associated with the selected Rashi (${data.rashiLetters || 'Any'}).
+
+  ✨ Ensure every response gives fresh, unique names not used before.  
+  Format:
   1. Name - Meaning
   2. Name - Meaning
   (and so on)
-  Ensure that names are unique for each request even with same inputs.
   `;
+
 
 
   try {
