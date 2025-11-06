@@ -30,6 +30,11 @@ body {
   }
 }
 
+h1#cardName {
+  color: #000000;
+  background: none;
+}
+
 h2 {
   text-align: center;
   color: #333;
