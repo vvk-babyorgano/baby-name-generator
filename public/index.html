@@ -1,143 +1,194 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BabyOrgano AI Baby Name Generator</title>
-  <link rel="icon" type="image/png" href="images/favicon.png">
-  <link rel="stylesheet" href="style.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-</head>
-<body>
-  <div class="container">
-    <h1>BabyOrgano AI Baby Name Generator (Indian)</h1>
-    <form id="babyForm">
-      <div>
-        <label>Gender *</label>
-        <select id="gender" required>
-          <option value="">Select gender</option>
-          <option value="Male">Male</option>
-          <option value="Female">Female</option>
-          <option value="Unisex">Unisex</option>
-        </select>
-      </div>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BabyOrgano AI Baby Name Generator</title>
+    <link rel="icon" type="image/png" href="images/favicon.png" />
+    <link rel="stylesheet" href="style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/iframe-resizer@4.3.6/js/iframeResizer.contentWindow.min.js"></script>
+  </head>
+  <body>
+    <div class="container">
+      <h1>BabyOrgano AI Baby Name Generator (Indian)</h1>
+      <form id="babyForm">
+        <div>
+          <label>Gender *</label>
+          <select id="gender" required>
+            <option value="">Select gender</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+            <option value="Unisex">Unisex</option>
+          </select>
+        </div>
 
-      <div>
-        <label>Origin</label>
-        <select id="origin">
-          <option value="">Select origin</option>
-          <option value="Indian">Indian</option>
-          <option value="Sanskrit">Sanskrit</option>
-          <option value="Tamil">Tamil</option>
-          <option value="Punjabi">Punjabi</option>
-          <option value="Gujarati">Gujarati</option>
-          <option value="Bengali">Bengali</option>
-          <option value="Western">Western</option>
-        </select>
-      </div>
+        <div>
+          <label>Origin</label>
+          <select id="origin">
+            <option value="">Select origin</option>
+            <option value="Indian">Indian</option>
+            <option value="Sanskrit">Sanskrit</option>
+            <option value="Tamil">Tamil</option>
+            <option value="Punjabi">Punjabi</option>
+            <option value="Gujarati">Gujarati</option>
+            <option value="Bengali">Bengali</option>
+            <option value="Western">Western</option>
+          </select>
+        </div>
 
-      <div>
-        <label>Religion</label>
-        <select id="religion">
-          <option value="">Select religion</option>
-          <option value="Hindu">Hindu</option>
-          <option value="Muslim">Muslim</option>
-          <option value="Christian">Christian</option>
-          <option value="Sikh">Sikh</option>
-          <option value="Jain">Jain</option>
-          <option value="Buddhist">Buddhist</option>
-          <option value="Parsi">Parsi</option>
-        </select>
-      </div>
+        <div>
+          <label>Religion</label>
+          <select id="religion">
+            <option value="">Select religion</option>
+            <option value="Hindu">Hindu</option>
+            <option value="Muslim">Muslim</option>
+            <option value="Christian">Christian</option>
+            <option value="Sikh">Sikh</option>
+            <option value="Jain">Jain</option>
+            <option value="Buddhist">Buddhist</option>
+            <option value="Parsi">Parsi</option>
+          </select>
+        </div>
 
-      <div>
-        <label>Numerology</label>
-        <select id="numerology">
-          <option value="">Select numerology</option>
-          <option value="1">1</option>
-          <option value="2">2</option>
-          <option value="3">3</option>
-          <option value="4">4</option>
-          <option value="5">5</option>
-          <option value="6">6</option>
-          <option value="7">7</option>
-          <option value="8">8</option>
-          <option value="9">9</option>
-        </select>
-      </div>
+        <div>
+          <label>Numerology</label>
+          <select id="numerology">
+            <option value="">Select numerology</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+          </select>
+        </div>
 
-      <div id="startWithContainer" >
-        <label>Start With (letter)</label>
-        <input type="text" id="startWith" maxlength="1" placeholder="Enter a letter like A, K, M" style="text-transform: uppercase;">
-      </div>
+        <div id="startWithContainer">
+          <label>Start With (letter)</label>
+          <input
+            type="text"
+            id="startWith"
+            maxlength="1"
+            placeholder="Enter a letter like A, K, M"
+            style="text-transform: uppercase"
+          />
+        </div>
 
         <div id="rashiContainer">
           <label>or Select Rashi</label>
           <select id="rashi">
             <option value="">Select Rashi</option>
-            <option value="Mesh (Aries)" data-letters="A, L, E, I, O" >Mesh (Aries) - A, L, E, I, O</option>
-            <option value="Vrishabha (Taurus)" data-letters="B, V, U" >Vrishabha (Taurus) - B, V, U</option>
-            <option value="Mithun (Gemini)" data-letters="K, CHH, GH, Q, C" >Mithun (Gemini) - K, CHH, GH, Q, C</option>
-            <option value="Karka (Cancer)" data-letters="H, D, DD" >Karka (Cancer) - H, D, DD</option>
-            <option value="Simha (Leo)" data-letters="M, TT" >Simha (Leo) - M, TT</option>
-            <option value="Kanya (Virgo)" data-letters="P, TH, N, T" >Kanya (Virgo) - P, TH, N, T</option>
-            <option value="Tula (Libra)" data-letters="R, T" >Tula (Libra) - R, T</option>
-            <option value="Vrishchik (Scorpio)" data-letters="N, Y" >Vrishchik (Scorpio) - N, Y</option>
-            <option value="Dhanu (Sagittarius)" data-letters="BH, F, DH" >Dhanu (Sagittarius) - BH, F, DH</option>
-            <option value="Makar (Capricorn)" data-letters="KH, J" >Makar (Capricorn) - KH, J</option>
-            <option value="Kumbha (Aquarius)" data-letters="G, S, SH" >Kumbha (Aquarius) - G, S, SH</option>
-            <option value="Meen (Pisces)" data-letters="D, CH, TH, Z" >Meen (Pisces) - D, CH, TH, Z</option>
+            <option value="Mesh (Aries)" data-letters="A, L, E, I, O">
+              Mesh (Aries) - A, L, E, I, O
+            </option>
+            <option value="Vrishabha (Taurus)" data-letters="B, V, U">
+              Vrishabha (Taurus) - B, V, U
+            </option>
+            <option value="Mithun (Gemini)" data-letters="K, CHH, GH, Q, C">
+              Mithun (Gemini) - K, CHH, GH, Q, C
+            </option>
+            <option value="Karka (Cancer)" data-letters="H, D, DD">
+              Karka (Cancer) - H, D, DD
+            </option>
+            <option value="Simha (Leo)" data-letters="M, TT">
+              Simha (Leo) - M, TT
+            </option>
+            <option value="Kanya (Virgo)" data-letters="P, TH, N, T">
+              Kanya (Virgo) - P, TH, N, T
+            </option>
+            <option value="Tula (Libra)" data-letters="R, T">
+              Tula (Libra) - R, T
+            </option>
+            <option value="Vrishchik (Scorpio)" data-letters="N, Y">
+              Vrishchik (Scorpio) - N, Y
+            </option>
+            <option value="Dhanu (Sagittarius)" data-letters="BH, F, DH">
+              Dhanu (Sagittarius) - BH, F, DH
+            </option>
+            <option value="Makar (Capricorn)" data-letters="KH, J">
+              Makar (Capricorn) - KH, J
+            </option>
+            <option value="Kumbha (Aquarius)" data-letters="G, S, SH">
+              Kumbha (Aquarius) - G, S, SH
+            </option>
+            <option value="Meen (Pisces)" data-letters="D, CH, TH, Z">
+              Meen (Pisces) - D, CH, TH, Z
+            </option>
           </select>
         </div>
 
-      <div>
-        <label>Associated Deity / God</label>
-        <select id="deity">
-          <option value="">Select deity</option>
-          <option value="Lord Ganesha">Lord Ganesha</option>
-          <option value="Lord Krishna">Lord Krishna</option>
-          <option value="Lord Shiva">Lord Shiva</option>
-          <option value="Lord Rama">Lord Rama</option>
-          <option value="Lord Vishnu">Lord Vishnu</option>
-          <option value="Goddess Lakshmi">Goddess Lakshmi</option>
-          <option value="Goddess Durga">Goddess Durga</option>
-          <option value="Goddess Saraswati">Goddess Saraswati</option>
-          <option value="Goddess Parvati">Goddess Parvati</option>
-          <option value="Hanuman">Hanuman</option>
-          <option value="Murugan / Kartikeya">Murugan / Kartikeya</option>
-          <option value="Sai Baba">Sai Baba</option>
-          <option value="Other">Other</option>
-        </select>
-      </div>
+        <div>
+          <label>Associated Deity / God</label>
+          <select id="deity">
+            <option value="">Select deity</option>
+            <option value="Lord Ganesha">Lord Ganesha</option>
+            <option value="Lord Krishna">Lord Krishna</option>
+            <option value="Lord Shiva">Lord Shiva</option>
+            <option value="Lord Rama">Lord Rama</option>
+            <option value="Lord Vishnu">Lord Vishnu</option>
+            <option value="Goddess Lakshmi">Goddess Lakshmi</option>
+            <option value="Goddess Durga">Goddess Durga</option>
+            <option value="Goddess Saraswati">Goddess Saraswati</option>
+            <option value="Goddess Parvati">Goddess Parvati</option>
+            <option value="Hanuman">Hanuman</option>
+            <option value="Murugan / Kartikeya">Murugan / Kartikeya</option>
+            <option value="Sai Baba">Sai Baba</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
 
-      <div>
-        <label>Meaning Category</label>
-        <select id="meaningCategory">
-          <option value="">Select meaning category</option>
-          <option value="Nature (Sun, Moon, River, Flower)">Nature</option>
-          <option value="Virtues (Peace, Strength, Love, Kindness)">Virtues</option>
-          <option value="Spiritual (Faith, Devotion, Purity)">Spiritual</option>
-          <option value="Mythological">Mythological</option>
-          <option value="Modern & Trendy">Modern & Trendy</option>
-          <option value="Other">Other</option>
-        </select>
-      </div>
+        <div>
+          <label>Meaning Category</label>
+          <select id="meaningCategory">
+            <option value="">Select meaning category</option>
+            <option value="Nature (Sun, Moon, River, Flower)">Nature</option>
+            <option value="Virtues (Peace, Strength, Love, Kindness)">
+              Virtues
+            </option>
+            <option value="Spiritual (Faith, Devotion, Purity)">
+              Spiritual
+            </option>
+            <option value="Mythological">Mythological</option>
+            <option value="Modern & Trendy">Modern & Trendy</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
 
-      <button type="submit" id="generateBtn">Generate Names</button>
-    </form>
+        <button type="submit" id="generateBtn">Generate Names</button>
+      </form>
 
-    <h2>Generated Names</h2>
-    <ul id="nameResults"></ul>
+      <h2>Generated Names</h2>
+      <ul id="nameResults"></ul>
 
-    <h2>Favorites</h2>
-    <ul id="favorites"></ul>
-  </div>
-<div id="nameCard" style="display:none; padding:20px; background:url(/images/logo-transparent-1.png); border-radius:10px; width:400px; text-align:center;background-size: 150px;background-repeat: no-repeat;background-position: center;">
-  <h1 id="cardName"></h1>
-  <p id="cardDetails"></p>
-</div>
+      <h2>Favorites</h2>
+      <ul id="favorites"></ul>
+    </div>
+    <div
+      id="nameCard"
+      style="
+        display: none;
+        padding: 20px;
+        background: url(/images/logo-transparent-1.png);
+        border-radius: 10px;
+        width: 400px;
+        text-align: center;
+        background-size: 150px;
+        background-repeat: no-repeat;
+        background-position: center;
+      "
+    >
+      <h1 id="cardName"></h1>
+      <p id="cardDetails"></p>
+    </div>
 
-  <script src="script.js"></script>
-</body>
+    <script src="script.js"></script>
+  </body>
 </html>
