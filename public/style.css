@@ -1,236 +1,236 @@
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(135deg, #ed1651 0%, #ffdee8 100%);
-      min-height: 100vh;
-      padding: 20px;
-    }
+body {
+  font-family: "Inter", sans-serif;
+  background: linear-gradient(135deg, #ed1651 0%, #ffdee8 100%);
+  min-height: 100vh;
+  padding: 20px;
+}
 
-    .container {
-      max-width: 900px;
-      margin: 0 auto;
-      background: #fff;
-      padding: 40px;
-      border-radius: 20px;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-      animation: fadeIn 0.6s ease;
-    }
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+  background: #fff;
+  padding: 40px;
+  border-radius: 20px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  animation: fadeIn 0.6s ease;
+}
 
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-        transform: translateY(20px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 
-    h1#cardName{
-    color: #000000;
-    background: none;
-    }
+h1#cardName {
+  color: #000000;
+  background: none;
+}
 
-    h1 {
-      text-align: center;
-      color: #333;
-      font-size: 26px;
-      margin-bottom: 10px;
-      background: linear-gradient(135deg, #ed1651 0%, #ff64a4 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
+h1 {
+  text-align: center;
+  color: #333;
+  font-size: 26px;
+  margin-bottom: 10px;
+  background: linear-gradient(135deg, #ed1651 0%, #ff64a4 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
 
-    h1::before {
-      content: '✨ ';
-    }
+h1::before {
+  content: "✨ ";
+}
 
-    h1::after {
-      content: ' ✨';
-    }
+h1::after {
+  content: " ✨";
+}
 
-    h2 {
-      text-align: center;
-      color: #333;
-      margin-top: 40px;
-      margin-bottom: 20px;
-      font-size: 1.8em;
-      padding-bottom: 10px;
-      border-bottom: 3px solid #ed1651;
-    }
+h2 {
+  text-align: center;
+  color: #333;
+  margin-top: 40px;
+  margin-bottom: 20px;
+  font-size: 1.8em;
+  padding-bottom: 10px;
+  border-bottom: 3px solid #ed1651;
+}
 
-    form {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 20px;
-      margin-top: 30px;
-    }
+form {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+  margin-top: 30px;
+}
 
-    form label {
-      display: block;
-      margin-bottom: 8px;
-      color: #333;
-      font-weight: 600;
-      font-size: 0.9em;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
+form label {
+  display: block;
+  margin-bottom: 8px;
+  color: #333;
+  font-weight: 600;
+  font-size: 0.9em;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
 
-    form select, 
-    form input {
-      width: 100%;
-      padding: 12px 15px;
-      border: 2px solid #e0e0e0;
-      border-radius: 10px;
-      font-size: 1em;
-      transition: all 0.3s ease;
-      background: #faf8f8;
-      font-family: inherit;
-    }
+form select,
+form input {
+  width: 100%;
+  padding: 12px 15px;
+  border: 2px solid #e0e0e0;
+  border-radius: 10px;
+  font-size: 1em;
+  transition: all 0.3s ease;
+  background: #faf8f8;
+  font-family: inherit;
+}
 
-    form select:focus, 
-    form input:focus {
-      outline: none;
-      border-color: #ed1651;
-      background: white;
-      box-shadow: 0 0 0 4px rgb(234 102 124 / 10%);
-    }
+form select:focus,
+form input:focus {
+  outline: none;
+  border-color: #ed1651;
+  background: white;
+  box-shadow: 0 0 0 4px rgb(234 102 124 / 10%);
+}
 
-    form select:hover, 
-    form input:hover {
-     border-color: #ed1651;
-    }
+form select:hover,
+form input:hover {
+  border-color: #ed1651;
+}
 
-    button {
-      grid-column: 1 / -1;
-      margin-top: 20px;
-      padding: 16px;
-      width: 100%;
-      background: linear-gradient(135deg, #ed1651 0%, #ff64a4 100%);
-      color: #fff;
-      border: none;
-      border-radius: 12px;
-      font-size: 1.1em;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      box-shadow: 0 4px 15px rgb(234 102 102 / 40%);
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
+button {
+  grid-column: 1 / -1;
+  margin-top: 20px;
+  padding: 16px;
+  width: 100%;
+  background: linear-gradient(135deg, #ed1651 0%, #ff64a4 100%);
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  font-size: 1.1em;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgb(234 102 102 / 40%);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
 
-    button:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(234, 102, 128, 0.6);
-    }
+button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(234, 102, 128, 0.6);
+}
 
-    button:active {
-      transform: translateY(0);
-    }
+button:active {
+  transform: translateY(0);
+}
 
-    ul {
-      list-style: none;
-      padding: 0;
-      display: grid;
-      gap: 15px;
-    }
+ul {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  gap: 15px;
+}
 
-    ul li {
-      background: linear-gradient(135deg, #faf5f7 0%, #fed9e8 100%);
-      margin: 0;
-      padding: 20px;
-      border-radius: 15px;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      border: 2px solid transparent;
-      position: relative;
-      overflow: hidden;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    }
+ul li {
+  background: linear-gradient(135deg, #faf5f7 0%, #fed9e8 100%);
+  margin: 0;
+  padding: 20px;
+  border-radius: 15px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
 
-    ul li::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 4px;
-      height: 100%;
-      background: #ea6666;
-      transform: scaleY(0);
-      transition: transform 0.3s ease;
-    }
+ul li::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: #ea6666;
+  transform: scaleY(0);
+  transition: transform 0.3s ease;
+}
 
-    ul li:hover::before {
-      transform: scaleY(1);
-    }
+ul li:hover::before {
+  transform: scaleY(1);
+}
 
-    ul li:hover {
-      transform: translateX(5px);
-      border-color: #ed1651;
-      box-shadow: 0 5px 15px rgb(234 102 103 / 30%);
-    }
+ul li:hover {
+  transform: translateX(5px);
+  border-color: #ed1651;
+  box-shadow: 0 5px 15px rgb(234 102 103 / 30%);
+}
 
-    /* Empty state styling */
-    ul:empty::after {
-      content: 'No names yet. Fill the form and click Generate Names!';
-      display: block;
-      text-align: center;
-      padding: 40px;
-      color: #999;
-      font-style: italic;
-    }
+/* Empty state styling */
+ul:empty::after {
+  content: "No names yet. Fill the form and click Generate Names!";
+  display: block;
+  text-align: center;
+  padding: 40px;
+  color: #999;
+  font-style: italic;
+}
 
-    /* Responsive design */
-    @media (max-width: 768px) {
-      .container {
-        padding: 15px;
-      }
+/* Responsive design */
+@media (max-width: 768px) {
+  .container {
+    padding: 15px;
+  }
 
-      h1 {
-        font-size: 21px;
-      }
+  h1 {
+    font-size: 21px;
+  }
 
-      h2 {
-        font-size: 18px;
-      }
+  h2 {
+    font-size: 18px;
+  }
 
-      form {
-        grid-template-columns: 1fr;
-        margin-top:15px;
-      }
-    }
+  form {
+    grid-template-columns: 1fr;
+    margin-top: 15px;
+  }
+}
 
-    /* Add visual separator */
-    form > label:nth-of-type(5) {
-      grid-column: 1 / -1;
-      text-align: center;
-      color: #999;
-      font-size: 0.85em;
-      margin-top: 10px;
-      position: relative;
-    }
+/* Add visual separator */
+form > label:nth-of-type(5) {
+  grid-column: 1 / -1;
+  text-align: center;
+  color: #999;
+  font-size: 0.85em;
+  margin-top: 10px;
+  position: relative;
+}
 
-    form > label:nth-of-type(5)::before,
-    form > label:nth-of-type(5)::after {
-      content: '';
-      position: absolute;
-      top: 50%;
-      width: 40%;
-      height: 1px;
-      background: #e0e0e0;
-    }
+form > label:nth-of-type(5)::before,
+form > label:nth-of-type(5)::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  width: 40%;
+  height: 1px;
+  background: #e0e0e0;
+}
 
-    form > label:nth-of-type(5)::before {
-      left: 0;
-    }
+form > label:nth-of-type(5)::before {
+  left: 0;
+}
 
-    form > label:nth-of-type(5)::after {
-      right: 0;
-    }
+form > label:nth-of-type(5)::after {
+  right: 0;
+}
