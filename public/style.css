@@ -40,7 +40,7 @@ h2 {
   color: #333;
   margin-top: 40px;
   margin-bottom: 20px;
-  font-size: 1.8em;
+  font-size: 22px;
   padding-bottom: 10px;
   border-bottom: 3px solid #ed1651;
 }
@@ -67,7 +67,7 @@ form input {
   padding: 12px 15px;
   border: 2px solid #e0e0e0;
   border-radius: 10px;
-  font-size: 1em;
+  font-size: 14px;
   transition: all 0.3s ease;
   background: #faf8f8;
   font-family: inherit;
@@ -95,8 +95,8 @@ button {
   color: #fff;
   border: none;
   border-radius: 12px;
-  font-size: 1.1em;
-  font-weight: 600;
+  font-size: 16px;
+  font-weight: 500;
   cursor: pointer;
   transition: all 0.3s ease;
   box-shadow: 0 4px 15px rgb(234 102 102 / 40%);
