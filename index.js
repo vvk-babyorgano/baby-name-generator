@@ -73,9 +73,9 @@ app.post("/generate", async (req, res) => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          model: "gpt-4.1-mini",
+          model: "google/gemini-flash-1.5-8b",
           messages: [{ role: "user", content: prompt }],
-          max_tokens: 350,
+          max_tokens: 500,
         }),
         signal: controller.signal,
       }
