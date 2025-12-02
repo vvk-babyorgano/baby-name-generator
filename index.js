@@ -12,14 +12,12 @@ app.use(express.static(path.join(__dirname, "public")));
 
 // Improved helper: Clean markdown and parse names
 function parseNamesWithMeanings(text) {
-  // Remove markdown formatting (bold, italic, etc.)
   text = text.replace(/\*\*/g, "").replace(/\*/g, "").replace(/__|_/g, "");
 
   return text
     .split(/\n+/)
     .map((line) => line.trim())
     .filter((line) => {
-      // Filter out empty lines and introduction/conclusion text
       if (!line) return false;
       if (line.toLowerCase().includes("okay, here")) return false;
       if (line.toLowerCase().includes("based on")) return false;
@@ -27,15 +25,10 @@ function parseNamesWithMeanings(text) {
       if (line.toLowerCase().includes("specified")) return false;
       if (line.toLowerCase().includes("unique")) return false;
       if (line.length < 5) return false;
-
-      // Must contain a separator (-, :, or –)
       return line.includes("-") || line.includes(":") || line.includes("–");
     })
     .map((line) => {
-      // Remove any remaining special characters
       line = line.replace(/[*_~`]/g, "").trim();
-
-      // Match patterns: "1. Name - Meaning" or "Name - Meaning"
       const match = line.match(/^\d*\.?\s*(.+?)\s*[-–:]\s*(.+)$/);
       if (match) {
         return {
@@ -48,12 +41,10 @@ function parseNamesWithMeanings(text) {
     .filter((item) => item !== null);
 }
 
-// API endpoint with multiple model fallback
 app.post("/generate", async (req, res) => {
   const data = req.body;
   const randomSeed = Math.floor(Math.random() * 10000);
 
-  // Build a cleaner prompt
   const prompt = `Generate exactly 10 baby names with meanings.
 
 Requirements:
@@ -87,42 +78,28 @@ Format (exactly like this):
 9. Name - Meaning
 10. Name - Meaning`;
 
-  // List of models to try in order (free/cheap first)
+  // Use only cheap paid models since free tier is exhausted
   const models = [
     {
-      name: "google/gemini-2.0-flash-exp:free",
-      tokens: 800,
-      description: "Free Gemini model",
-    },
-    {
-      name: "meta-llama/llama-3.2-3b-instruct:free",
-      tokens: 600,
-      description: "Free Llama model",
-    },
-    {
-      name: "qwen/qwen-2.5-7b-instruct:free",
-      tokens: 600,
-      description: "Free Qwen model",
-    },
-    {
-      name: "mistralai/mistral-7b-instruct:free",
-      tokens: 600,
-      description: "Free Mistral model",
-    },
-    {
-      name: "gpt-4.1-mini",
+      name: "google/gemini-flash-1.5-8b",
       tokens: 300,
-      description: "Paid GPT model (fallback)",
+      description: "Very cheap Gemini model (paid)",
+    },
+    {
+      name: "openai/gpt-4o-mini",
+      tokens: 300,
+      description: "Cheap GPT model (paid)",
     },
   ];
 
-  // Try each model until one works
+  let lastError = null;
+
   for (const model of models) {
     try {
-      console.log(`🔄 Trying model: ${model.description}...`);
+      console.log(`🔄 Trying model: ${model.description} (${model.name})...`);
 
       const controller = new AbortController();
-      const timeout = setTimeout(() => controller.abort(), 25000);
+      const timeout = setTimeout(() => controller.abort(), 30000);
 
       const response = await fetch(
         "https://openrouter.ai/api/v1/chat/completions",
@@ -131,6 +108,8 @@ Format (exactly like this):
           headers: {
             Authorization: `Bearer ${API_KEY}`,
             "Content-Type": "application/json",
+            "HTTP-Referer": "http://localhost:3000",
+            "X-Title": "Baby Name Generator",
           },
           body: JSON.stringify({
             model: model.name,
@@ -143,71 +122,112 @@ Format (exactly like this):
       );
 
       clearTimeout(timeout);
-      const result = await response.json();
 
-      // Check for errors
-      if (result.error) {
-        console.log(`❌ ${model.name} failed: ${result.error.message}`);
-
-        // If it's a credit error and we're on the last paid model, inform user
-        if (
-          result.error.message.includes("credits") &&
-          model.name === "gpt-4.1-mini"
-        ) {
-          console.log(
-            "💡 All free models failed and insufficient credits for paid model"
-          );
-        }
-
-        continue; // Try next model
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.log(
+          `❌ ${model.name} HTTP error: ${response.status} - ${errorText}`
+        );
+        lastError = `HTTP ${response.status}: ${errorText}`;
+        continue;
       }
 
-      // Check if we got content
+      const result = await response.json();
+      console.log(
+        `📊 Response from ${model.name}:`,
+        JSON.stringify(result, null, 2)
+      );
+
+      if (result.error) {
+        console.log(`❌ ${model.name} failed: ${result.error.message}`);
+        lastError = result.error.message;
+        continue;
+      }
+
       const text = result?.choices?.[0]?.message?.content || "";
 
       if (!text) {
         console.log(`❌ ${model.name} returned empty response`);
+        lastError = "Empty response from AI";
         continue;
       }
 
       console.log(`✅ Success with ${model.name}`);
-      console.log("Raw AI response:", text);
+      console.log("📝 Raw AI response:", text);
 
-      // Parse the names
       const nameList = parseNamesWithMeanings(text);
 
       if (nameList.length === 0) {
         console.log(`❌ ${model.name} generated unparseable output`);
+        lastError = "Could not parse AI output";
         continue;
       }
 
-      // Success! Return the names
+      console.log(`✅ Successfully parsed ${nameList.length} names`);
+
       return res.json({
         names: nameList,
         model_used: model.name,
       });
     } catch (err) {
       console.log(`❌ ${model.name} error: ${err.message}`);
-      continue; // Try next model
+      lastError = err.message;
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      continue;
     }
   }
 
-  // If all models failed
-  console.error("❌ All models failed");
+  console.error("❌ All models failed. Last error:", lastError);
+
+  // Check if it's a rate limit error
+  if (lastError && lastError.includes("Rate limit exceeded")) {
+    return res.status(429).json({
+      error: "Daily free tier limit reached (50 requests/day)",
+      details: "You've used all 50 free requests for today",
+      solutions: [
+        "Add $10 to your OpenRouter account to unlock 1000 free requests/day",
+        "Wait until midnight UTC for the rate limit to reset",
+        "Your rate limit resets at: June 2, 2025 12:00 AM UTC",
+      ],
+      addCreditsUrl: "https://openrouter.ai/settings/credits",
+    });
+  }
+
   return res.status(500).json({
-    error:
-      "Unable to generate names at this time. Please try again in a few moments or add credits to your OpenRouter account.",
-    details: "All available models exhausted",
+    error: "Unable to generate names. All AI models are currently unavailable.",
+    details: lastError || "All available models exhausted",
+    suggestion:
+      "Please try again in a few moments. If the issue persists, check your OpenRouter API key and account status.",
   });
 });
 
-// Health check endpoint
 app.get("/health", (req, res) => {
   res.json({
     status: "ok",
     apiKeyLoaded: !!API_KEY,
     timestamp: new Date().toISOString(),
   });
+});
+
+app.get("/test-api", async (req, res) => {
+  try {
+    const response = await fetch("https://openrouter.ai/api/v1/models", {
+      headers: {
+        Authorization: `Bearer ${API_KEY}`,
+      },
+    });
+
+    const data = await response.json();
+    res.json({
+      status: "API connection successful",
+      availableModels: data.data?.length || 0,
+    });
+  } catch (err) {
+    res.status(500).json({
+      status: "API connection failed",
+      error: err.message,
+    });
+  }
 });
 
 app.listen(PORT, () => {
@@ -218,4 +238,10 @@ app.listen(PORT, () => {
     `   POST http://localhost:${PORT}/generate - Generate baby names`
   );
   console.log(`   GET  http://localhost:${PORT}/health - Health check`);
+  console.log(
+    `   GET  http://localhost:${PORT}/test-api - Test API connection`
+  );
+  console.log(
+    "\n⚠️  Note: Free tier limit reached. Add credits or wait for reset."
+  );
 });
