@@ -10,74 +10,55 @@ const app = express();
 app.use(express.json());
 app.use(express.static(path.join(__dirname, "public")));
 
-// Improved helper: Clean markdown and parse names
+// Helper: Parse AI text into structured name + meaning pairs
 function parseNamesWithMeanings(text) {
-  // Remove markdown formatting
-  text = text.replace(/\*\*/g, "").replace(/\*/g, "");
-
   return text
     .split(/\n+/)
     .map((line) => line.trim())
-    .filter((line) => {
-      // Filter out empty lines and introduction text
-      if (!line) return false;
-      if (line.toLowerCase().includes("okay, here")) return false;
-      if (line.toLowerCase().includes("based on")) return false;
-      if (line.toLowerCase().includes("parameter")) return false;
-      if (line.toLowerCase().includes("specified")) return false;
-      if (line.length < 5) return false;
-
-      // Must contain a separator (-, :, or –)
-      return line.includes("-") || line.includes(":") || line.includes("–");
-    })
+    .filter((line) => line)
     .map((line) => {
-      // Remove any remaining special characters
-      line = line.replace(/[*_~`]/g, "").trim();
-
-      // Match: "1. Name - Meaning" or "Name - Meaning"
+      // Example formats: "1. Aarav - Peaceful, calm and wise"
       const match = line.match(/^\d*\.?\s*(.+?)\s*[-–:]\s*(.+)$/);
       if (match) {
-        return {
-          name: match[1].trim(),
-          meaning: match[2].trim(),
-        };
+        return { name: match[1].trim(), meaning: match[2].trim() };
       }
-      return null;
-    })
-    .filter((item) => item !== null);
+      return { name: line, meaning: "Meaning not available." };
+    });
 }
 
 // API endpoint
 app.post("/generate", async (req, res) => {
   const data = req.body;
-  const randomSeed = Math.floor(Math.random() * 1000);
 
-  const prompt = `Generate exactly 10 baby names with meanings.
+  const randomSeed = Math.floor(Math.random() * 1000); // random number
+  const prompt = `
+  Generate 10 beautiful and meaningful baby names with their meanings based on the following details (unique output each time you generate, even with same inputs):
+  Random seed: ${randomSeed}
+  - Gender: ${data.gender || "Any"}
+  - Origin: ${data.origin || "Any"}
+  - Religion: ${data.religion || "Any"}
+  - Numerology: ${data.numerology || "Any"}
+  - Start With: ${
+    data.startWith
+      ? data.startWith
+      : data.rashi
+      ? `Letters from ${data.rashi}`
+      : "Any"
+  }
+  - Rashi: ${data.rashi || "None selected"}
+  - Associated Deity: ${data.deity || "Any"}
+  - Meaning Category: ${data.meaningCategory || "Any"}
 
-Requirements:
-- Gender: ${data.gender || "Any"}
-- Origin: ${data.origin || "Any"}
-- Religion: ${data.religion || "Any"}
-- Numerology: ${data.numerology || "Any"}
-- Rashi: ${data.rashi || "None"}
-- Start with letters: ${data.rashiLetters || "Any"}
-- Deity: ${data.deity || "Any"}
-- Meaning Category: ${data.meaningCategory || "Any"}
-- Random seed: ${randomSeed}
+  All names MUST start with letters associated with the selected Rashi (${
+    data.rashiLetters || "Any"
+  }).
 
-${
-  data.rashiLetters
-    ? `CRITICAL: All names MUST start with these letters: ${data.rashiLetters}`
-    : ""
-}
-
-Output ONLY the numbered list in this exact format (no introduction, no bold text, no explanation):
-1. Name - Meaning
-2. Name - Meaning
-3. Name - Meaning
-(continue for all 10)
-
-Do NOT include any text before or after the list. Do NOT use bold formatting.`;
+  ✨ Ensure every response gives fresh, unique names not used before.  
+  Format:
+  1. Name - Meaning
+  2. Name - Meaning
+  (and so on)
+  `;
 
   try {
     const controller = new AbortController();
@@ -92,29 +73,26 @@ Do NOT include any text before or after the list. Do NOT use bold formatting.`;
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          model: "google/gemini-2.0-flash-exp:free",
+          model: "gpt-4.1-mini",
           messages: [{ role: "user", content: prompt }],
-          max_tokens: 600,
-          temperature: 0.7, // Add some variety
+          max_tokens: 350,
         }),
         signal: controller.signal,
       }
     );
 
     clearTimeout(timeout);
-    const result = await response.json();
 
+    const result = await response.json();
     console.log("OpenRouter API response:", JSON.stringify(result, null, 2));
 
     if (result.error) {
-      return res.status(500).json({
-        error: `OpenRouter API error: ${result.error.message}`,
-      });
+      return res
+        .status(500)
+        .json({ error: `OpenRouter API error: ${result.error.message}` });
     }
 
     const text = result?.choices?.[0]?.message?.content || "";
-    console.log("Raw AI response:", text); // Debug log
-
     const nameList = parseNamesWithMeanings(text);
 
     if (nameList.length === 0) {
@@ -127,9 +105,9 @@ Do NOT include any text before or after the list. Do NOT use bold formatting.`;
     res.json({ names: nameList });
   } catch (err) {
     console.error("Fetch error:", err.message);
-    res.status(500).json({
-      error: "Failed to generate names. Please try again later.",
-    });
+    res
+      .status(500)
+      .json({ error: "Failed to generate names. Please try again later." });
   }
 });
 
