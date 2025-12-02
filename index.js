@@ -75,7 +75,7 @@ app.post("/generate", async (req, res) => {
         body: JSON.stringify({
           model: "gpt-4.1-mini",
           messages: [{ role: "user", content: prompt }],
-          max_tokens: 400,
+          max_tokens: 350,
         }),
         signal: controller.signal,
       }
@@ -96,12 +96,10 @@ app.post("/generate", async (req, res) => {
     const nameList = parseNamesWithMeanings(text);
 
     if (nameList.length === 0) {
-      return res
-        .status(200)
-        .json({
-          names: [],
-          error: "No names generated. Try adjusting filters.",
-        });
+      return res.status(200).json({
+        names: [],
+        error: "No names generated. Try adjusting filters.",
+      });
     }
 
     res.json({ names: nameList });
